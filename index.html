@@ -7,44 +7,41 @@
 
     <title>Realidad Aumentada</title>
 
-    <!-- Librería A-Frame -->
+    <!-- A-Frame -->
     <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
 
-    <!-- Librería MindAR -->
+    <!-- MindAR -->
     <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.2/dist/mindar-image-aframe.prod.js"></script>
 
     <style>
-        /* Nombre en la parte inferior derecha */
+        /* Nombre pequeño en la esquina inferior derecha */
         #nombreUsuario {
             position: fixed;
-            bottom: 12px;
-            right: 10px;
+            bottom: 8px;
+            right: 8px;
             z-index: 9999;
 
             color: white;
             font-family: Arial, Helvetica, sans-serif;
 
-            /* Tamaño pequeño y adaptable */
-            font-size: clamp(10px, 2.5vw, 16px);
-            font-weight: bold;
+            /* Tamaño reducido */
+            font-size: 9px;
+            font-weight: normal;
             text-align: right;
+            line-height: 1.2;
 
-            /* Sombra para que se lea sobre cualquier imagen */
-            text-shadow:
-                -1px -1px 2px black,
-                 1px -1px 2px black,
-                -1px  1px 2px black,
-                 1px  1px 2px black;
+            /* Sombra ligera para mejorar la lectura */
+            text-shadow: 1px 1px 2px black;
 
-            /* Fondo discreto */
-            background: rgba(0, 0, 0, 0.45);
-            padding: 5px 8px;
-            border-radius: 6px;
+            /* Fondo discreto y compacto */
+            background: rgba(0, 0, 0, 0.35);
+            padding: 3px 5px;
+            border-radius: 4px;
 
-            /* Evitar que el nombre se salga de la pantalla */
-            max-width: calc(100vw - 30px);
+            /* Mantener el texto dentro de la pantalla */
+            max-width: calc(100vw - 20px);
             box-sizing: border-box;
-            overflow-wrap: anywhere;
+            white-space: nowrap;
 
             pointer-events: none;
             display: none;
@@ -55,9 +52,7 @@
 <body style="margin: 0; overflow: hidden;">
 
     <!-- Nombre del autor -->
-    <div id="nombreUsuario">
-        Aldo Adrián Nuño López
-    </div>
+    <div id="nombreUsuario">Aldo Adrián Nuño López</div>
 
     <!-- Escena de realidad aumentada -->
     <a-scene
@@ -76,7 +71,6 @@
         vr-mode-ui="enabled: false"
         device-orientation-permission-ui="enabled: false">
 
-        <!-- Recursos de imágenes -->
         <a-assets>
             <img id="muralFondo" src="aldo.jpeg">
             <img id="diabloVerde" src="verde.png">
@@ -93,7 +87,7 @@
             id="objetivoAR"
             mindar-image-target="targetIndex: 0">
 
-            <!-- Capa 1: Imagen de fondo -->
+            <!-- Fondo -->
             <a-image
                 src="#muralFondo"
                 position="0 0 0"
@@ -102,34 +96,28 @@
                 material="shader: flat; color: #FFF;">
             </a-image>
 
-            <!-- Capa 2: Diablo verde -->
+            <!-- Diablo verde -->
             <a-image
                 src="#diabloVerde"
                 position="0 0 0.2"
                 width="3"
                 height="2.4"
-                material="
-                    shader: flat;
-                    color: #FFF;
-                    transparent: true;
-                ">
+                material="shader: flat; color: #FFF; transparent: true;">
             </a-image>
 
         </a-entity>
-
     </a-scene>
 
     <script>
-        // Obtener los elementos
         const objetivoAR = document.getElementById("objetivoAR");
         const nombreUsuario = document.getElementById("nombreUsuario");
 
-        // Mostrar el nombre cuando se detecte la imagen
+        // Mostrar el nombre al reconocer la imagen
         objetivoAR.addEventListener("targetFound", function () {
             nombreUsuario.style.display = "block";
         });
 
-        // Ocultar el nombre cuando se pierda la imagen
+        // Ocultar el nombre cuando se pierda el objetivo
         objetivoAR.addEventListener("targetLost", function () {
             nombreUsuario.style.display = "none";
         });
@@ -137,3 +125,4 @@
 
 </body>
 </html>
+```
