@@ -1,33 +1,94 @@
+```html
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <title>Realidad Aumentada</title>
+
+    <!-- A-Frame -->
     <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
+
+    <!-- MindAR -->
     <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.2/dist/mindar-image-aframe.prod.js"></script>
+
+    <style>
+        /* Nombre en la parte inferior derecha */
+        #nombreUsuario {
+            position: fixed;
+            bottom: 20px;
+            right: 15px;
+            z-index: 9999;
+
+            color: white;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: clamp(14px, 3.5vw, 24px);
+            font-weight: bold;
+            text-align: right;
+
+            /* Borde oscuro para mejorar la visibilidad */
+            text-shadow:
+                -2px -2px 3px black,
+                 2px -2px 3px black,
+                -2px  2px 3px black,
+                 2px  2px 3px black,
+                 0px  0px 8px black;
+
+            background: rgba(0, 0, 0, 0.45);
+            padding: 8px 12px;
+            border-radius: 8px;
+
+            /* Evita que el texto interfiera con los controles */
+            pointer-events: none;
+            display: none;
+        }
+    </style>
 </head>
 
-<body>
-    <!-- Configuración estable al máximo para evitar temblores -->
+<body style="margin: 0; overflow: hidden;">
+
+    <!-- Nombre que aparecerá al detectar la imagen -->
+    <div id="nombreUsuario">
+        Aldo Adrián Nuño López
+    </div>
+
     <a-scene
-        mindar-image="imageTargetSrc: targets.mind; filterMinCF: 0.001; filterBeta: 0.01; missTolerance: 150;"
+        mindar-image="
+            imageTargetSrc: targets.mind;
+            filterMinCF: 0.001;
+            filterBeta: 0.01;
+            missTolerance: 150;
+        "
         color-space="sRGB"
-        renderer="colorManagement: true; physicallyCorrectLights: true; antialias: true;"
+        renderer="
+            colorManagement: true;
+            physicallyCorrectLights: true;
+            antialias: true;
+        "
         vr-mode-ui="enabled: false"
         device-orientation-permission-ui="enabled: false">
 
         <a-assets>
+            <!-- Imagen de fondo -->
             <img id="muralFondo" src="aldo.jpeg">
-            <!-- Actualizado para leer tu archivo PNG -->
+
+            <!-- Imagen PNG del diablo verde -->
             <img id="diabloVerde" src="verde.png">
         </a-assets>
 
-        <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
+        <!-- Cámara -->
+        <a-camera
+            position="0 0 0"
+            look-controls="enabled: false">
+        </a-camera>
 
-        <a-entity mindar-image-target="targetIndex: 0">
+        <!-- Objetivo de realidad aumentada -->
+        <a-entity
+            id="objetivoAR"
+            mindar-image-target="targetIndex: 0">
 
-            <!-- Capa 1: El fondo pegado a la pared -->
+            <!-- Capa 1: Fondo -->
             <a-image
                 src="#muralFondo"
                 position="0 0 0"
@@ -36,27 +97,39 @@
                 material="shader: flat; color: #FFF;">
             </a-image>
 
-            <!-- Capa 2: El diablo verde flotando hacia ti (Z = 0.2). Se activa la transparencia para el PNG -->
+            <!-- Capa 2: Diablo verde transparente -->
             <a-image
                 src="#diabloVerde"
                 position="0 0 0.2"
                 width="3"
                 height="2.4"
-                material="shader: flat; color: #FFF; transparent: true;">
+                material="
+                    shader: flat;
+                    color: #FFF;
+                    transparent: true;
+                ">
             </a-image>
-
-            <!-- Capa 3: Nombre ajustado a la derecha y hacia abajo -->
-            <a-text
-                value="Aldo Adrian Nuno Lopez"
-                position="1.0 -0.8 0.3"
-                align="right"
-                color="#FFFFFF"
-                width="4"
-                wrap-count="20">
-            </a-text>
 
         </a-entity>
 
     </a-scene>
+
+    <script>
+        // Elementos de la página
+        const objetivoAR = document.getElementById("objetivoAR");
+        const nombreUsuario = document.getElementById("nombreUsuario");
+
+        // Mostrar el nombre cuando se detecte la imagen
+        objetivoAR.addEventListener("targetFound", function () {
+            nombreUsuario.style.display = "block";
+        });
+
+        // Ocultar el nombre cuando se pierda la imagen
+        objetivoAR.addEventListener("targetLost", function () {
+            nombreUsuario.style.display = "none";
+        });
+    </script>
+
 </body>
 </html>
+```
