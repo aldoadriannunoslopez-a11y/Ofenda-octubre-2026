@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.2/dist/mindar-image-aframe.prod.js"></script>
+
+    <script>
+        AFRAME.registerComponent("smooth-follow", {
+            init: function () {
+                this.smoothedPosition = new THREE.Vector3();
+                this.smoothedQuaternion = new THREE.Quaternion();
+                this.initialized = false;
+            },
+
+            tick: function () {
+                const object = this.el.object3D;
+
+                if (!this.initialized) {
+                    this.smoothedPosition.copy(object.position);
+                    this.smoothedQuaternion.copy(object.quaternion);
+                    this.initialized = true;
+                    return;
+                }
+
+                // Suavizar la posición hacia donde MindAR quiere ir
+                this.smoothedPosition.lerp(object.position, 0.08);
+                this.smoothedQuaternion.slerp(object.quaternion, 0.08);
+
+                // Aplicar la posición suavizada
+                object.position.copy(this.smoothedPosition);
+                object.quaternion.copy(this.smoothedQuaternion);
+            }
+        });
+    </script>
+</head>
+
+<body>
+
+<a-scene
+    mindar-image="imageTargetSrc: targets.mind; filterMinCF: 0.001; filterBeta: 0.01; missTolerance: 150;"
+    color-space="sRGB"
+    renderer="colorManagement: true; physicallyCorrectLights: true; antialias: true;"
+    vr-mode-ui="enabled: false"
+    device-orientation-permission-ui="enabled: false">
+
+    <a-assets>
+        <img id="muralFondo" src="aldo.jpeg">
+    </a-assets>
+
+    <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
+
+    <a-entity
+        id="target"
+        mindar-image-target="targetIndex: 0"
+        smooth-follow>
+
+        <a-image
+            src="#muralFondo"
+            position="0 0 0"
+            width="2"
+            height="1.6"
+            material="shader: flat; color: #FFF;">
+        </a-image>
+
+    </a-entity>
+
+</a-scene>
+
+</body>
+</html>
