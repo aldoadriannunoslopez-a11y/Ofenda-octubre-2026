@@ -6,14 +6,10 @@
 
     <title>Realidad Aumentada</title>
 
-    <!-- A-Frame -->
     <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
-
-    <!-- MindAR -->
     <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.2/dist/mindar-image-aframe.prod.js"></script>
 
     <style>
-        /* Nombre pequeño en la esquina inferior derecha */
         #nombreUsuario {
             position: fixed;
             bottom: 8px;
@@ -22,22 +18,17 @@
 
             color: white;
             font-family: Arial, Helvetica, sans-serif;
-
-            /* Tamaño reducido */
             font-size: 9px;
             font-weight: normal;
             text-align: right;
             line-height: 1.2;
 
-            /* Sombra ligera para mejorar la lectura */
             text-shadow: 1px 1px 2px black;
 
-            /* Fondo discreto y compacto */
             background: rgba(0, 0, 0, 0.35);
             padding: 3px 5px;
             border-radius: 4px;
 
-            /* Mantener el texto dentro de la pantalla */
             max-width: calc(100vw - 20px);
             box-sizing: border-box;
             white-space: nowrap;
@@ -50,23 +41,12 @@
 
 <body style="margin: 0; overflow: hidden;">
 
-    <!-- Nombre del autor -->
     <div id="nombreUsuario">Aldo Adrián Nuño López</div>
 
-    <!-- Escena de realidad aumentada -->
     <a-scene
-        mindar-image="
-            imageTargetSrc: targets.mind;
-            filterMinCF: 0.001;
-            filterBeta: 0.01;
-            missTolerance: 150;
-        "
+        mindar-image="imageTargetSrc: targets.mind; filterMinCF: 0.001; filterBeta: 0.01; missTolerance: 150;"
         color-space="sRGB"
-        renderer="
-            colorManagement: true;
-            physicallyCorrectLights: true;
-            antialias: true;
-        "
+        renderer="colorManagement: true; physicallyCorrectLights: true; antialias: true;"
         vr-mode-ui="enabled: false"
         device-orientation-permission-ui="enabled: false">
 
@@ -75,18 +55,15 @@
             <img id="diabloVerde" src="verde.png">
         </a-assets>
 
-        <!-- Cámara -->
         <a-camera
             position="0 0 0"
             look-controls="enabled: false">
         </a-camera>
 
-        <!-- Objetivo de realidad aumentada -->
         <a-entity
             id="objetivoAR"
             mindar-image-target="targetIndex: 0">
 
-            <!-- Fondo -->
             <a-image
                 src="#muralFondo"
                 position="0 0 0"
@@ -95,7 +72,6 @@
                 material="shader: flat; color: #FFF;">
             </a-image>
 
-            <!-- Diablo verde -->
             <a-image
                 src="#diabloVerde"
                 position="0 0 0.2"
@@ -111,12 +87,10 @@
         const objetivoAR = document.getElementById("objetivoAR");
         const nombreUsuario = document.getElementById("nombreUsuario");
 
-        // Mostrar el nombre al reconocer la imagen
         objetivoAR.addEventListener("targetFound", function () {
             nombreUsuario.style.display = "block";
         });
 
-        // Ocultar el nombre cuando se pierda el objetivo
         objetivoAR.addEventListener("targetLost", function () {
             nombreUsuario.style.display = "none";
         });
